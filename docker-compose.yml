@@ -24,11 +24,6 @@ services:
       - PGUSER=postgres
     ports:
       - 10931:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 2s
-      timeout: 5s
-      retries: 20
 
   pg_normalized_batch:
     build: services/pg_normalized_batch
@@ -41,11 +36,6 @@ services:
       - PGUSER=postgres
     ports:
       - 10932:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 2s
-      timeout: 5s
-      retries: 20
 
 volumes:
     pg_normalized:
