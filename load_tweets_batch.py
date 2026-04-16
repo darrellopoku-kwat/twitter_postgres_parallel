@@ -387,14 +387,14 @@ if __name__ == '__main__':
         'application_name': 'load_tweets.py --inputs '+' '.join(args.inputs),
         })
     connection = engine.connect()
-
-    for filename in sorted(args.inputs, reverse=True):
-        with zipfile.ZipFile(filename, 'r') as archive:
-            print(datetime.datetime.now(),filename)
-            for subfilename in sorted(archive.namelist(), reverse=True):
-                with io.TextIOWrapper(archive.open(subfilename)) as f:
-                    tweets = []
-                    for i,line in enumerate(f):
-                        tweet = json.loads(line)
-                        tweets.append(tweet)
-                    insert_tweets(connection,tweets,args.batch_size)
+    with connection.begin():
+        for filename in sorted(args.inputs, reverse=True):
+            with zipfile.ZipFile(filename, 'r') as archive:
+                print(datetime.datetime.now(),filename)
+                for subfilename in sorted(archive.namelist(), reverse=True):
+                    with io.TextIOWrapper(archive.open(subfilename)) as f:
+                        tweets = []
+                        for i,line in enumerate(f):
+                            tweet = json.loads(line)
+                            tweets.append(tweet)
+                        insert_tweets(connection,tweets,args.batch_size)
